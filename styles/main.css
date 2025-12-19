@@ -110,6 +110,8 @@ body {
 }
 
 .shield-icon {
+    width: 48px;
+    height: auto;
     color: var(--accent-primary);
     filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
 }
