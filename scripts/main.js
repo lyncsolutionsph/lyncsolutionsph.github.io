@@ -451,17 +451,8 @@ function init3DModel() {
         return;
     }
 
-    console.log('Initializing 3D model...');
-    console.log('THREE:', typeof THREE);
-    console.log('STLLoader:', typeof THREE.STLLoader);
-
-    if (typeof THREE === 'undefined') {
-        console.error('THREE.js not loaded');
-        return;
-    }
-
-    if (typeof THREE.STLLoader === 'undefined') {
-        console.error('STLLoader not loaded');
+    if (typeof THREE === 'undefined' || typeof THREE.STLLoader === 'undefined') {
+        console.error('THREE.js or STLLoader not loaded');
         return;
     }
 
@@ -479,21 +470,10 @@ function init3DModel() {
     const size = container.offsetWidth || 500;
     renderer.setSize(size, size);
     renderer.setPixelRatio(window.devicePixelRatio);
-    
-    console.log('Container size:', size);
-    console.log('Canvas parent:', container);
-    console.log('Canvas dimensions:', canvas.width, 'x', canvas.height);
-    console.log('Canvas offsetWidth/Height:', canvas.offsetWidth, 'x', canvas.offsetHeight);
-    console.log('Canvas display:', window.getComputedStyle(canvas).display);
-    console.log('Canvas visibility:', window.getComputedStyle(canvas).visibility);
-    console.log('Canvas opacity:', window.getComputedStyle(canvas).opacity);
 
     // Camera position
     camera.position.set(0, 0, 120);
     camera.lookAt(0, 0, 0);
-    
-    console.log('Camera position:', camera.position);
-    console.log('Camera looking at: 0, 0, 0');
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x6366f1, 0.6);
@@ -508,27 +488,28 @@ function init3DModel() {
     scene.add(directionalLight2);
 
     // Load STL model
-    console.log('Loading STL model from: models/model.stl');
     const loader = new THREE.STLLoader();
+    
+    // Start animation loop immediately (will render once model loads)
+    let mesh = null;
+    function animate() {
+        requestAnimationFrame(animate);
+        if (mesh) {
+            mesh.rotation.z += 0.003;
+        }
+        renderer.render(scene, camera);
+    }
+    animate();
+    
     loader.load(
         'models/model.stl',
         (geometry) => {
-            console.log('STL model loaded successfully');
-            
-            // Log geometry details
+            // Center and prepare geometry
             geometry.computeBoundingBox();
             const boundingBox = geometry.boundingBox;
-            console.log('Model bounding box min:', boundingBox.min.x, boundingBox.min.y, boundingBox.min.z);
-            console.log('Model bounding box max:', boundingBox.max.x, boundingBox.max.y, boundingBox.max.z);
-            
-            // Center the geometry itself
             const center = new THREE.Vector3();
             boundingBox.getCenter(center);
             geometry.translate(-center.x, -center.y, -center.z);
-            
-            // Recompute bounding box after centering
-            geometry.computeBoundingBox();
-            console.log('Model center after translation:', geometry.boundingBox.min, geometry.boundingBox.max);
             
             const material = new THREE.MeshPhongMaterial({
                 color: 0xffffff,
@@ -539,45 +520,22 @@ function init3DModel() {
                 flatShading: false
             });
 
-            const mesh = new THREE.Mesh(geometry, material);
+            mesh = new THREE.Mesh(geometry, material);
             
-            // Rotate model so bottom view becomes front view, right-side up
-            mesh.rotation.x = Math.PI / 2; // 90 degrees
-            mesh.rotation.y = Math.PI; // 180 degrees to flip right-side up
+            // Rotate model
+            mesh.rotation.x = Math.PI / 2;
+            mesh.rotation.y = Math.PI;
             
-            // Now the mesh is already centered at origin, just scale it
+            // Scale model
             const size = new THREE.Vector3();
             boundingBox.getSize(size);
-            console.log('Model size:', size.x, size.y, size.z);
-            console.log('Original center was:', center.x, center.y, center.z);
-            
             const maxDim = Math.max(size.x, size.y, size.z);
-            const scale = 75 / maxDim; // Larger scale for better visibility
+            const scale = 75 / maxDim;
             mesh.scale.set(scale, scale, scale);
-            
-            console.log('Model scale:', scale);
-            console.log('Mesh position:', mesh.position.x, mesh.position.y, mesh.position.z);
 
             scene.add(mesh);
-            console.log('Mesh added to scene');
-            console.log('Scene children:', scene.children.length);
-
-            // Animation
-            function animate() {
-                requestAnimationFrame(animate);
-                mesh.rotation.z += 0.003; // Continuous slow rotation
-                renderer.render(scene, camera);
-            }
-            animate();
-            console.log('Model animation started');
-            
-            // Force a render to test
-            renderer.render(scene, camera);
-            console.log('Initial render complete');
         },
-        (xhr) => {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
+        undefined,
         (error) => {
             console.error('Error loading STL model:', error);
         }
