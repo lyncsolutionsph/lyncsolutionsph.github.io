@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -82,42 +84,7 @@
                 
                 <div class="hero-visual">
                     <div class="security-illustration">
-                        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Shield -->
-                            <path d="M200 50L80 100V180C80 260 140 330 200 350C260 330 320 260 320 180V100L200 50Z" stroke="url(#gradient1)" stroke-width="4" fill="url(#gradient2)" opacity="0.9"/>
-                            
-                            <!-- Lock -->
-                            <rect x="170" y="180" width="60" height="70" rx="8" fill="url(#gradient3)" stroke="url(#gradient1)" stroke-width="3"/>
-                            <path d="M185 180V160C185 151.716 191.716 145 200 145C208.284 145 215 151.716 215 160V180" stroke="url(#gradient1)" stroke-width="3" stroke-linecap="round"/>
-                            <circle cx="200" cy="215" r="8" fill="#6366f1"/>
-                            <rect x="197" y="215" width="6" height="20" rx="3" fill="#6366f1"/>
-                            
-                            <!-- Network nodes -->
-                            <circle cx="120" cy="140" r="6" fill="#06b6d4" opacity="0.8"/>
-                            <circle cx="280" cy="140" r="6" fill="#06b6d4" opacity="0.8"/>
-                            <circle cx="150" cy="200" r="5" fill="#8b5cf6" opacity="0.7"/>
-                            <circle cx="250" cy="200" r="5" fill="#8b5cf6" opacity="0.7"/>
-                            
-                            <!-- Connection lines -->
-                            <line x1="120" y1="140" x2="170" y2="170" stroke="#6366f1" stroke-width="2" opacity="0.4" stroke-dasharray="4 4"/>
-                            <line x1="280" y1="140" x2="230" y2="170" stroke="#6366f1" stroke-width="2" opacity="0.4" stroke-dasharray="4 4"/>
-                            
-                            <!-- Gradient definitions -->
-                            <defs>
-                                <linearGradient id="gradient1" x1="200" y1="50" x2="200" y2="350" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0%" stop-color="#6366f1"/>
-                                    <stop offset="100%" stop-color="#8b5cf6"/>
-                                </linearGradient>
-                                <linearGradient id="gradient2" x1="200" y1="50" x2="200" y2="350" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0%" stop-color="rgba(99, 102, 241, 0.1)"/>
-                                    <stop offset="100%" stop-color="rgba(139, 92, 246, 0.05)"/>
-                                </linearGradient>
-                                <linearGradient id="gradient3" x1="200" y1="180" x2="200" y2="250" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0%" stop-color="rgba(99, 102, 241, 0.2)"/>
-                                    <stop offset="100%" stop-color="rgba(139, 92, 246, 0.1)"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
+                        <canvas id="model-canvas"></canvas>
                         <div class="glow-effect"></div>
                     </div>
                 </div>
@@ -129,8 +96,8 @@
     <section id="about" class="about-section">
         <div class="container">
             <div class="section-header">
-                <span class="section-label">Why Choose SEER</span>
-                <h2 class="section-title">Comprehensive Cybersecurity, <br>Simplified</h2>
+                <span class="section-label">WHY CHOOSE SEER</span>
+                <h2 class="section-title">Cybersecurity That Works Where It's Needed Most</h2>
             </div>
             
             <div class="about-grid">
@@ -140,8 +107,8 @@
                             <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
                         </svg>
                     </div>
-                    <h3>Modular Architecture</h3>
-                    <p>Modular architecture enables easy customization and scalability to fit your organization's unique needs.</p>
+                    <h3>Modular by Design</h3>
+                    <p>SEER is built with a modular architecture that allows security features to adapt as your organization grows—without costly upgrades, replacements, or unnecessary complexity.</p>
                 </div>
 
                 <div class="about-card">
@@ -150,8 +117,8 @@
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                     </div>
-                    <h3>Built for SMEs & LGUs</h3>
-                    <p>Focuses on usability and governance alignment for effective cybersecurity tailored to your organization.</p>
+                    <h3>Security That Fits Real Organizations</h3>
+                    <p>Purpose-built for small and mid-sized enterprises and local government units, SEER delivers strong protection while remaining easy to manage, practical, and aligned with governance needs.</p>
                 </div>
 
                 <div class="about-card">
@@ -160,8 +127,8 @@
                             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                         </svg>
                     </div>
-                    <h3>Cybersecurity Device</h3>
-                    <p>A comprehensive hardware solution developed by LYNC Solutions, Inc. for complete network protection.</p>
+                    <h3>Dedicated Security Device</h3>
+                    <p>SEER is a purpose-built cybersecurity appliance developed by LYNC Solutions, providing always-on network protection through reliable, hardware-backed security.</p>
                 </div>
             </div>
         </div>
@@ -186,7 +153,7 @@
                         </svg>
                     </div>
                     <h3 class="product-title">SEER</h3>
-                    <p class="product-description">Enterprise-grade perimeter security made simple</p>
+                    <p class="product-description">Essential network security, built for simplicity</p>
                     
                     <ul class="product-features">
                         <li>
@@ -234,7 +201,7 @@
                         </svg>
                     </div>
                     <h3 class="product-title">SEER Advance</h3>
-                    <p class="product-description">Visibility • Control • Smart Defense</p>
+                    <p class="product-description">Deeper Visibility. Smarter Control. Stronger Defense.</p>
                     
                     <ul class="product-features">
                         <li>
@@ -268,7 +235,7 @@
                             <span>XAI Threat Explanation</span>
                         </li>
                     </ul>
-                    <button class="product-btn primary">Get Started</button>
+                    <button class="product-btn primary">Start with SEER Advance</button>
                 </div>
 
                 <!-- SEER Enterprise -->
@@ -282,7 +249,7 @@
                         </svg>
                     </div>
                     <h3 class="product-title">SEER Enterprise</h3>
-                    <p class="product-description">Autonomous • Scalable • Mission-Critical Security</p>
+                    <p class="product-description">Autonomous, Scalable Security for Mission-Critical Environments</p>
                     
                     <ul class="product-features">
                         <li>
@@ -316,7 +283,7 @@
                             <span>SOAR Grade Automated Response</span>
                         </li>
                     </ul>
-                    <button class="product-btn">Contact Sales</button>
+                    <button class="product-btn">Talk to Sales</button>
                 </div>
             </div>
         </div>
@@ -327,7 +294,7 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-label">Key Capabilities</span>
-                <h2 class="section-title">Why Organizations Trust SEER</h2>
+                <h2 class="section-title">Trusted Cybersecurity for the Modern Era</h2>
             </div>
             
             <div class="features-grid">
@@ -337,8 +304,8 @@
                             <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                         </svg>
                     </div>
-                    <h3>Modular Design</h3>
-                    <p>Build your perfect security stack with flexible, customizable modules that grow with your organization.</p>
+                    <h3>Modular Architecture</h3>
+                    <p>Adaptable security components that scale with your organization's growth—add capabilities as you need them without expensive replacements or system overhauls.</p>
                 </div>
                 
                 <div class="feature-card">
@@ -347,8 +314,8 @@
                             <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
                         </svg>
                     </div>
-                    <h3>Real-Time Monitoring</h3>
-                    <p>Continuous surveillance with instant threat detection and automated response capabilities.</p>
+                    <h3>Always-On Protection</h3>
+                    <p>Dedicated hardware providing continuous network monitoring and threat detection—no performance impact on your business systems.</p>
                 </div>
                 
                 <div class="feature-card">
@@ -357,8 +324,8 @@
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
                         </svg>
                     </div>
-                    <h3>Governance Alignment</h3>
-                    <p>Meet compliance requirements effortlessly with built-in NIST CSF and ISO 27001 frameworks.</p>
+                    <h3>Built-In Compliance</h3>
+                    <p>Pre-configured security controls aligned with NIST Cybersecurity Framework and ISO 27001 standards—simplifying governance for SMEs and LGUs.</p>
                 </div>
                 
                 <div class="feature-card">
@@ -367,8 +334,8 @@
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
                         </svg>
                     </div>
-                    <h3>Explainable AI</h3>
-                    <p>Understand every security decision with transparent, human-readable AI explanations.</p>
+                    <h3>Transparent AI Defense</h3>
+                    <p>AI-powered threat detection with clear, understandable explanations—know exactly why actions are taken and build security confidence across your team.</p>
                 </div>
                 
                 <div class="feature-card">
@@ -377,8 +344,8 @@
                             <path d="M3 3h18v18H3zM21 9H3M21 15H3M12 3v18"/>
                         </svg>
                     </div>
-                    <h3>User-Friendly</h3>
-                    <p>Intuitive dashboards and workflows designed for teams of all technical skill levels.</p>
+                    <h3>Practical and Manageable</h3>
+                    <p>Intuitive interface designed for real-world teams—manage enterprise-grade security without requiring dedicated cybersecurity specialists.</p>
                 </div>
                 
                 <div class="feature-card">
@@ -387,8 +354,8 @@
                             <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
                     </div>
-                    <h3>Cost-Effective</h3>
-                    <p>Enterprise-grade protection without the enterprise price tag, tailored for SMEs and LGUs.</p>
+                    <h3>Right-Sized Investment</h3>
+                    <p>Enterprise-grade security built for SME and LGU budgets—strong protection that doesn't require enterprise-scale resources or ongoing vendor dependencies.</p>
                 </div>
             </div>
         </div>
