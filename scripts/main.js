@@ -534,10 +534,15 @@ function init3DModel() {
             mesh.scale.set(scale, scale, scale);
 
             scene.add(mesh);
+            
+            // Hide loading screen after model is loaded
+            hideLoadingScreen();
         },
         undefined,
         (error) => {
             console.error('Error loading STL model:', error);
+            // Hide loading screen even if there's an error
+            hideLoadingScreen();
         }
     );
 
@@ -549,6 +554,20 @@ function init3DModel() {
         camera.aspect = 1;
         camera.updateProjectionMatrix();
     });
+}
+
+// ========================================
+// Loading Screen
+// ========================================
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+        // Remove from DOM after transition
+        setTimeout(() => {
+            loadingScreen.remove();
+        }, 500);
+    }
 }
 
 // ========================================
