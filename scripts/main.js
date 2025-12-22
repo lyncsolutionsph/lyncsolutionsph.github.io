@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initParticles();
     initButtonHandlers();
-    init3DModel();
+    // init3DModel(); // Disabled - using model-viewer instead
+    hideLoadingScreen(); // Hide loading screen immediately
 });
 
 // ========================================
@@ -20,10 +21,7 @@ function initButtonHandlers() {
     // Handle Contact Us, Get Started, and product buttons - scroll to contact
     const contactButtons = document.querySelectorAll('.btn-primary, .cta-btn, .product-btn');
     
-    console.log('Contact buttons found:', contactButtons.length);
-    
     contactButtons.forEach((button, index) => {
-        console.log(`Attaching listener to button ${index}:`, button.className);
         // Ensure button type is set to 'button' not 'submit'
         if (!button.hasAttribute('type')) {
             button.setAttribute('type', 'button');
@@ -32,19 +30,14 @@ function initButtonHandlers() {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Contact button clicked, scrolling to #contact');
-            
             // Scroll to contact section
             const contactSection = document.querySelector('#contact');
             if (contactSection) {
                 const offsetTop = contactSection.offsetTop - 80;
-                console.log('Scrolling to:', offsetTop);
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
-            } else {
-                console.error('Contact section not found');
             }
         });
     });
@@ -52,10 +45,7 @@ function initButtonHandlers() {
     // Handle Learn More button - scroll to about section
     const learnMoreButtons = document.querySelectorAll('.btn-secondary');
     
-    console.log('Learn More buttons found:', learnMoreButtons.length);
-    
     learnMoreButtons.forEach((button, index) => {
-        console.log(`Attaching listener to Learn More button ${index}:`, button.className);
         // Ensure button type is set to 'button' not 'submit'
         if (!button.hasAttribute('type')) {
             button.setAttribute('type', 'button');
@@ -64,19 +54,14 @@ function initButtonHandlers() {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Learn More button clicked, scrolling to #about');
-            
             // Scroll to about section
             const aboutSection = document.querySelector('#about');
             if (aboutSection) {
                 const offsetTop = aboutSection.offsetTop - 80;
-                console.log('Scrolling to:', offsetTop);
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
-            } else {
-                console.error('About section not found');
             }
         });
     });
@@ -447,18 +432,18 @@ window.addEventListener('scroll', () => {
 function init3DModel() {
     const canvas = document.getElementById('model-canvas');
     if (!canvas) {
-        console.error('Canvas element not found');
+        // Canvas not found - using model-viewer instead
         return;
     }
 
-    if (typeof THREE === 'undefined' || typeof THREE.STLLoader === 'undefined') {
-        console.error('THREE.js or STLLoader not loaded');
+    if (typeof THREE === 'undefined' || typeof THREE.OBJLoader === 'undefined' || typeof THREE.MTLLoader === 'undefined') {
+        console.error('THREE.js, OBJLoader, or MTLLoader not loaded');
         return;
     }
 
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(70, 21/9, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ 
         canvas: canvas, 
         alpha: true, 
@@ -467,80 +452,210 @@ function init3DModel() {
 
     // Set size
     const container = canvas.parentElement;
-    const size = container.offsetWidth || 500;
-    renderer.setSize(size, size);
+    const width = container.offsetWidth || 900;
+    const height = width * (9/21);
+    renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Handle WebGL context loss
+    canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();
+    }, false);
+    
+    canvas.addEventListener('webglcontextrestored', () => {
+        // Context restored, continue rendering
+    }, false);
 
-    // Camera position
-    camera.position.set(0, 0, 120);
+    // Camera position - moved back to show more of the model
+    camera.position.set(0, 0, 500);
     camera.lookAt(0, 0, 0);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x6366f1, 0.6);
+    // Lighting - Enhanced for stunning visuals
+    const ambientLight = new THREE.AmbientLight(0x6366f1, 0.8);
     scene.add(ambientLight);
 
-    const directionalLight1 = new THREE.DirectionalLight(0x8b5cf6, 0.8);
-    directionalLight1.position.set(5, 5, 5);
+    const directionalLight1 = new THREE.DirectionalLight(0x8b5cf6, 1.2);
+    directionalLight1.position.set(8, 8, 8);
     scene.add(directionalLight1);
 
-    const directionalLight2 = new THREE.DirectionalLight(0x06b6d4, 0.4);
-    directionalLight2.position.set(-5, -5, 5);
+    const directionalLight2 = new THREE.DirectionalLight(0x06b6d4, 0.8);
+    directionalLight2.position.set(-8, -8, 8);
     scene.add(directionalLight2);
-
-    // Load STL model
-    const loader = new THREE.STLLoader();
     
-    // Start animation loop immediately (will render once model loads)
+    const directionalLight3 = new THREE.DirectionalLight(0xa855f7, 0.6);
+    directionalLight3.position.set(0, -8, 5);
+    scene.add(directionalLight3);
+    
+    // Add subtle rim light
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    rimLight.position.set(0, 0, -10);
+    scene.add(rimLight);
+
+    // Create Nexus Lines background effect
+    const particleCount = 80;
+    const particles = [];
+    const lines = [];
+    
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+        const geometry = new THREE.SphereGeometry(2, 8, 8);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x6366f1,
+            transparent: true,
+            opacity: 0.8
+        });
+        const particle = new THREE.Mesh(geometry, material);
+        
+        particle.position.set(
+            (Math.random() - 0.5) * 1000,
+            (Math.random() - 0.5) * 500,
+            (Math.random() - 0.5) * 300 - 250
+        );
+        
+        particle.velocity = new THREE.Vector3(
+            (Math.random() - 0.5) * 0.8,
+            (Math.random() - 0.5) * 0.8,
+            (Math.random() - 0.5) * 0.3
+        );
+        
+        particles.push(particle);
+        scene.add(particle);
+    }
+    
+    // Function to update lines between nearby particles
+    function updateNexusLines() {
+        // Remove old lines
+        lines.forEach(line => scene.remove(line));
+        lines.length = 0;
+        
+        // Create new lines between nearby particles
+        const maxDistance = 200;
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const distance = particles[i].position.distanceTo(particles[j].position);
+                if (distance < maxDistance) {
+                    const geometry = new THREE.BufferGeometry().setFromPoints([
+                        particles[i].position,
+                        particles[j].position
+                    ]);
+                    const material = new THREE.LineBasicMaterial({ 
+                        color: 0x8b5cf6,
+                        transparent: true,
+                        opacity: (1 - distance / maxDistance) * 0.6
+                    });
+                    const line = new THREE.Line(geometry, material);
+                    lines.push(line);
+                    scene.add(line);
+                }
+            }
+        }
+    }
+
+    // Load OBJ model with MTL materials
+    const mtlLoader = new THREE.MTLLoader();
+    const objLoader = new THREE.OBJLoader();
+    
+    // Start animation loop
     let mesh = null;
     function animate() {
         requestAnimationFrame(animate);
+        
+        // Rotate model to showcase all sides (turntable rotation)
         if (mesh) {
-            mesh.rotation.z += 0.003;
+            mesh.rotation.y += 0.003;
         }
+        
+        // Animate particles
+        particles.forEach(particle => {
+            particle.position.add(particle.velocity);
+            
+            // Bounce off boundaries
+            if (Math.abs(particle.position.x) > 500) particle.velocity.x *= -1;
+            if (Math.abs(particle.position.y) > 250) particle.velocity.y *= -1;
+            if (particle.position.z > 0 || particle.position.z < -500) particle.velocity.z *= -1;
+        });
+        
+        // Update nexus lines
+        updateNexusLines();
+        
         renderer.render(scene, camera);
     }
     animate();
     
-    loader.load(
-        'models/model.stl',
-        (geometry) => {
-            // Center and prepare geometry
-            geometry.computeBoundingBox();
-            const boundingBox = geometry.boundingBox;
-            const center = new THREE.Vector3();
-            boundingBox.getCenter(center);
-            geometry.translate(-center.x, -center.y, -center.z);
+    // Load MTL (material) file first to preserve colors
+    mtlLoader.load(
+        'models/model-new.mtl',
+        (materials) => {
+            materials.preload();
+            objLoader.setMaterials(materials);
             
-            const material = new THREE.MeshPhongMaterial({
-                color: 0xffffff,
-                emissive: 0x6366f1,
-                emissiveIntensity: 0.3,
-                specular: 0x8b5cf6,
-                shininess: 100,
-                flatShading: false
-            });
-
-            mesh = new THREE.Mesh(geometry, material);
-            
-            // Rotate model
-            mesh.rotation.x = Math.PI / 2;
-            mesh.rotation.y = Math.PI;
-            
-            // Scale model
-            const size = new THREE.Vector3();
-            boundingBox.getSize(size);
-            const maxDim = Math.max(size.x, size.y, size.z);
-            const scale = 75 / maxDim;
-            mesh.scale.set(scale, scale, scale);
-
-            scene.add(mesh);
-            
-            // Hide loading screen after model is loaded
-            hideLoadingScreen();
+            // Then load OBJ file
+            objLoader.load(
+                'models/model-new.obj',
+                (object) => {
+                    // Create a wrapper group for proper transformations
+                    const modelGroup = new THREE.Group();
+                    
+                    // Calculate initial bounding box
+                    let box = new THREE.Box3().setFromObject(object);
+                    let center = new THREE.Vector3();
+                    box.getCenter(center);
+                    
+                    // Center the object in its local space first
+                    object.position.sub(center);
+                    
+                    // Apply rotations to the object
+                    object.rotation.x = Math.PI / 2;
+                    object.rotation.y = Math.PI;
+                    
+                    // Add object to group
+                    modelGroup.add(object);
+                    
+                    // Update transformations
+                    modelGroup.updateMatrixWorld(true);
+                    
+                    // Recalculate bounding box after rotation to get correct dimensions
+                    box = new THREE.Box3().setFromObject(modelGroup);
+                    const size = new THREE.Vector3();
+                    box.getSize(size);
+                    
+                    // Calculate scale based on the longest dimension
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 700 / maxDim;
+                    modelGroup.scale.set(scale, scale, scale);
+                    
+                    // Update again after scaling
+                    modelGroup.updateMatrixWorld(true);
+                    
+                    // Final centering - get the bounding box of the scaled group
+                    box = new THREE.Box3().setFromObject(modelGroup);
+                    center = new THREE.Vector3();
+                    box.getCenter(center);
+                    
+                    // Position the group so its center is at origin (0,0,0)
+                    modelGroup.position.sub(center);
+                    
+                    // Create a pivot point at the origin for clean rotation
+                    const pivot = new THREE.Group();
+                    pivot.add(modelGroup);
+                    
+                    mesh = pivot;
+                    scene.add(mesh);
+                    
+                    // Hide loading screen after model is loaded
+                    hideLoadingScreen();
+                },
+                undefined,
+                (error) => {
+                    console.error('Error loading OBJ model:', error);
+                    // Hide loading screen even if there's an error
+                    hideLoadingScreen();
+                }
+            );
         },
         undefined,
         (error) => {
-            console.error('Error loading STL model:', error);
+            console.error('Error loading MTL materials:', error);
             // Hide loading screen even if there's an error
             hideLoadingScreen();
         }
@@ -549,9 +664,10 @@ function init3DModel() {
     // Handle window resize
     window.addEventListener('resize', () => {
         const container = canvas.parentElement;
-        const newSize = container.offsetWidth || 400;
-        renderer.setSize(newSize, newSize);
-        camera.aspect = 1;
+        const newWidth = container.offsetWidth || 900;
+        const newHeight = newWidth * (9/21);
+        renderer.setSize(newWidth, newHeight);
+        camera.aspect = 21/9;
         camera.updateProjectionMatrix();
     });
 }
