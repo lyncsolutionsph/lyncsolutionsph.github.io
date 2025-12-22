@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initParticles();
     initButtonHandlers();
-    // init3DModel(); // Disabled - using model-viewer instead
+    initModelViewer();
     hideLoadingScreen(); // Hide loading screen immediately
 });
 
@@ -433,6 +433,7 @@ function init3DModel() {
     const canvas = document.getElementById('model-canvas');
     if (!canvas) {
         // Canvas not found - using model-viewer instead
+        console.log('3D Model canvas not found - using model-viewer component instead');
         return;
     }
 
@@ -670,6 +671,59 @@ function init3DModel() {
         camera.aspect = 21/9;
         camera.updateProjectionMatrix();
     });
+}
+
+// ========================================
+// Model Viewer Handler
+// ========================================
+function initModelViewer() {
+    const modelViewer = document.querySelector('model-viewer');
+    if (!modelViewer) {
+        console.log('Model viewer element not found');
+        return;
+    }
+
+    // Handle model loading events
+    modelViewer.addEventListener('load', () => {
+        console.log('✓ 3D Model loaded successfully');
+    });
+
+    modelViewer.addEventListener('error', (event) => {
+        console.error('× Failed to load 3D model:', event);
+        // Optionally show a fallback message to the user
+        const container = modelViewer.parentElement;
+        if (container) {
+            const fallbackMsg = document.createElement('div');
+            fallbackMsg.className = 'model-fallback';
+            fallbackMsg.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin: 0 auto 1rem;">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p style="font-size: 0.9rem;">3D Model Preview</p>
+                    <p style="font-size: 0.8rem; opacity: 0.7;">Interactive view temporarily unavailable</p>
+                </div>
+            `;
+            modelViewer.style.display = 'none';
+            container.insertBefore(fallbackMsg, modelViewer);
+        }
+    });
+
+    modelViewer.addEventListener('progress', (event) => {
+        const progress = event.detail.totalProgress;
+        if (progress < 1) {
+            console.log(`Loading 3D model: ${Math.round(progress * 100)}%`);
+        }
+    });
+
+    // Add a timeout fallback (10 seconds)
+    setTimeout(() => {
+        if (!modelViewer.loaded && !modelViewer.classList.contains('error-shown')) {
+            console.warn('Model loading is taking longer than expected...');
+        }
+    }, 10000);
 }
 
 // ========================================
