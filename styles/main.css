@@ -1182,90 +1182,47 @@ body {
     font-size: 1rem;
 }
 
-.contact-form {
+.contact-map {
     background: var(--bg-card);
     padding: 2.5rem;
     border-radius: 1.5rem;
     border: 1px solid var(--border-color);
+    position: relative;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.form-group {
+.contact-map h3 {
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
+    color: var(--text-primary);
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.contact-map iframe {
     width: 100%;
-    padding: 1rem 1.25rem;
+    height: 450px;
+    border: 0;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+}
+
+.map-overlay {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
     background: rgba(10, 14, 26, 0.8);
     border: 1px solid var(--border-color);
     border-radius: 0.75rem;
-    color: var(--text-primary);
-    font-size: 1rem;
-    font-family: inherit;
-    transition: var(--transition-base);
 }
 
-.form-group select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 3rem;
+.map-overlay p {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
 }
 
-.form-group select option {
-    background: var(--bg-card);
-    color: var(--text-primary);
+.map-overlay p:last-child {
+    margin-bottom: 0;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: var(--text-muted);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    background: rgba(99, 102, 241, 0.05);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-.submit-btn {
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1.125rem;
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-base);
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
-}
-
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.6);
+.map-overlay strong {
+    color: var(--accent-primary);
 }
 
 /* ========================================
