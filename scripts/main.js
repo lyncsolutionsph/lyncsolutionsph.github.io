@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initModelViewer();
     initFormValidation();
     initIdealForOverlay();
+    initEventPopup();
 });
 
 // ========================================
@@ -859,4 +860,178 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         }
     `;
     document.head.appendChild(style);
+}
+
+// ========================================
+// Event Popup — Story Style + Countdown
+// ========================================
+function initEventPopup() {
+    const LAUNCH_DATE = new Date('2026-03-19T09:00:00+08:00').getTime();
+    const now = Date.now();
+
+    // Hide everything if launch date has passed
+    if (now >= LAUNCH_DATE) {
+        const overlay = document.getElementById('event-popup');
+        const heroBanner = document.getElementById('hero-launch-banner');
+        if (overlay) overlay.remove();
+        if (heroBanner) heroBanner.remove();
+        // Show hero-bottom on mobile after launch
+        const heroBottom = document.querySelector('.hero-bottom');
+        if (heroBottom) heroBottom.classList.add('hero-bottom-visible');
+        return;
+    }
+
+    const overlay = document.getElementById('event-popup');
+    if (!overlay) return;
+
+    const modal = overlay.querySelector('.event-popup-modal');
+    const closeBtn = overlay.querySelector('.event-popup-close');
+    const slides = overlay.querySelectorAll('.event-slide');
+    const bars = overlay.querySelectorAll('.story-bar-fill');
+    const tapPrev = overlay.querySelector('.story-tap-prev');
+    const tapNext = overlay.querySelector('.story-tap-next');
+    const storyBars = overlay.querySelectorAll('.story-bar');
+    let current = 0;
+    let autoTimer = null;
+    const DURATION = 6000; // 6 seconds per slide
+
+    // Show popup after loading screen
+    const navbarEl = document.querySelector('.navbar');
+    setTimeout(() => {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        if (navbarEl) navbarEl.style.display = 'none';
+        goToSlide(0);
+        initCountdown();
+    }, 2500);
+
+    // --- Close ---
+    function closePopup() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (navbarEl) navbarEl.style.display = '';
+        stopAuto();
+    }
+
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay && closeBtn.style.display !== 'none') closePopup();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active') && closeBtn.style.display !== 'none') closePopup();
+    });
+
+    // --- Story Navigation ---
+    function goToSlide(index) {
+        // Reset all bars & slides
+        slides.forEach((s, i) => {
+            s.classList.remove('active', 'exit-left');
+            s.style.transform = i > index ? 'translateX(60px)' : 'translateX(-60px)';
+        });
+        bars.forEach((b, i) => {
+            b.classList.remove('active', 'done');
+            b.style.animation = 'none';
+            // Mark previous slides as done
+            if (i < index) {
+                b.classList.add('done');
+            }
+        });
+
+        current = index;
+
+        // Activate current slide
+        slides[current].classList.add('active');
+        slides[current].style.transform = '';
+
+        // Always hide close button on navigation
+        closeBtn.style.display = 'none';
+        closeBtn.style.opacity = '0';
+
+        // Animate current bar
+        void bars[current].offsetWidth; // force reflow
+        bars[current].style.animation = '';
+        bars[current].classList.add('active');
+
+        // Auto advance
+        stopAuto();
+        autoTimer = setTimeout(() => {
+            if (current < slides.length - 1) {
+                goToSlide(current + 1);
+            } else {
+                // All stories viewed — mark last as done, reveal close button
+                bars[current].classList.remove('active');
+                bars[current].classList.add('done');
+                closeBtn.style.display = '';
+                requestAnimationFrame(() => { closeBtn.style.opacity = '1'; });
+            }
+        }, DURATION);
+    }
+
+    function stopAuto() {
+        clearTimeout(autoTimer);
+    }
+
+    // Tap zones
+    tapNext.addEventListener('click', () => {
+        if (current < slides.length - 1) {
+            goToSlide(current + 1);
+        }
+        // On last slide, tapping next does nothing — must wait for auto-timer to reveal close
+    });
+
+    tapPrev.addEventListener('click', () => {
+        if (current > 0) {
+            goToSlide(current - 1);
+        } else {
+            goToSlide(0); // restart first
+        }
+    });
+
+    // Click on progress bar to jump
+    storyBars.forEach((bar) => {
+        bar.addEventListener('click', () => {
+            goToSlide(parseInt(bar.dataset.index));
+        });
+    });
+
+    // Keyboard arrows
+    document.addEventListener('keydown', (e) => {
+        if (!overlay.classList.contains('active')) return;
+        if (e.key === 'ArrowRight' && current < slides.length - 1) goToSlide(current + 1);
+        if (e.key === 'ArrowLeft' && current > 0) goToSlide(current - 1);
+    });
+
+    // --- Countdown ---
+    function initCountdown() {
+        const targetDate = LAUNCH_DATE;
+        const daysEl = document.getElementById('cd-days');
+        const hoursEl = document.getElementById('cd-hours');
+        const minutesEl = document.getElementById('cd-minutes');
+        const secondsEl = document.getElementById('cd-seconds');
+
+        if (!daysEl) return;
+
+        function tick() {
+            const diff = targetDate - Date.now();
+
+            if (diff <= 0) {
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                const label = overlay.querySelector('.countdown-label');
+                if (label) label.textContent = 'We Have Launched!';
+                return;
+            }
+
+            daysEl.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+            hoursEl.textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+            minutesEl.textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            secondsEl.textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+
+            requestAnimationFrame(() => setTimeout(tick, 1000));
+        }
+
+        tick();
+    }
 }

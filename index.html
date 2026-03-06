@@ -144,6 +144,30 @@
                 <div class="hero-top-text">
                     <span class="seer-title">SEER</span>
                 </div>
+
+                <!-- Launch Announcement -->
+                <div class="hero-launch-announce" id="hero-launch-banner">
+                    <div class="hero-launch-pill">
+                        <span class="hero-launch-pill-dot"></span>
+                        <span>Upcoming Event</span>
+                    </div>
+                    <h2 class="hero-launch-heading">SEER Unveiled <span>2026</span></h2>
+                    <p class="hero-launch-tagline">Cybersecurity &amp; Intelligence Forum</p>
+                    <div class="hero-launch-details">
+                        <div class="hero-launch-detail">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span>March 19, 2026</span>
+                        </div>
+                        <div class="hero-launch-detail">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>10:00 AM – 4:00 PM</span>
+                        </div>
+                        <div class="hero-launch-detail">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Makati, Philippines</span>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- 3D Product Layer (centered, large) -->
                 <div class="hero-product">
@@ -174,6 +198,120 @@
             </div>
         </div>
     </section>
+
+    <!-- Event Popup Modal (Story Style) -->
+    <div id="event-popup" class="event-popup-overlay">
+        <div class="event-popup-modal">
+
+            <!-- Story Progress Bars -->
+            <div class="story-progress">
+                <div class="story-bar" data-index="0"><div class="story-bar-fill active"></div></div>
+                <div class="story-bar" data-index="1"><div class="story-bar-fill"></div></div>
+                <div class="story-bar" data-index="2"><div class="story-bar-fill"></div></div>
+                <div class="story-bar" data-index="3"><div class="story-bar-fill"></div></div>
+            </div>
+
+            <!-- Header -->
+            <div class="story-header">
+                <div class="story-avatar">
+                    <img src="images/Asset-12.png" alt="SEER">
+                </div>
+                <div class="story-header-info">
+                    <span class="story-header-name">SEER by LYNC Solutions</span>
+                    <span class="story-header-time">March 19, 2026 · 10:00 AM – 4:00 PM · Makati, Philippines</span>
+                </div>
+                <button class="event-popup-close" aria-label="Close" style="display:none;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <!-- Tap Zones (left = prev, right = next) -->
+            <div class="story-tap-zone story-tap-prev" aria-label="Previous"></div>
+            <div class="story-tap-zone story-tap-next" aria-label="Next"></div>
+
+            <!-- Slides -->
+            <div class="event-carousel">
+                <div class="event-carousel-track">
+
+                    <!-- Slide 1: SEER Unveiled 2026 -->
+                    <div class="event-slide active">
+                        <div class="event-slide-inner event-slide-image">
+                            <div class="speaker-image-wrapper">
+                                <picture>
+                                    <source media="(max-width: 768px)" srcset="images/guess_speakers/announce_portrait_0.jpg">
+                                    <img src="images/guess_speakers/announce_0.jpg" alt="SEER Unveiled 2026 — Cybersecurity and Intelligence Forum" loading="eager">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Speaker Announcement 1 -->
+                    <div class="event-slide">
+                        <div class="event-slide-inner event-slide-image">
+                            <div class="speaker-image-wrapper">
+                                <picture>
+                                    <source media="(max-width: 768px)" srcset="images/guess_speakers/announce_portrait_1.jpg">
+                                    <img src="images/guess_speakers/announce_1.png" alt="Speaker Announcement" loading="lazy">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Speaker Announcement 2 -->
+                    <div class="event-slide">
+                        <div class="event-slide-inner event-slide-image">
+                            <div class="speaker-image-wrapper">
+                                <picture>
+                                    <source media="(max-width: 768px)" srcset="images/guess_speakers/announce_portrait_2.jpg">
+                                    <img src="images/guess_speakers/announce_2.png" alt="Speaker Announcement" loading="lazy">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Speaker Announcement 3 -->
+                    <div class="event-slide">
+                        <div class="event-slide-inner event-slide-image">
+                            <div class="speaker-image-wrapper">
+                                <picture>
+                                    <source media="(max-width: 768px)" srcset="images/guess_speakers/announce_portrait_3.jpg">
+                                    <img src="images/guess_speakers/announce_3.png" alt="Speaker Announcement" loading="lazy">
+                                </picture>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Fixed Countdown at Bottom -->
+            <div class="event-countdown">
+                <div class="countdown-label">Countdown to Launch — March 19, 2026</div>
+                <div class="countdown-timer" id="countdown-timer">
+                    <div class="countdown-unit">
+                        <span class="countdown-value" id="cd-days">00</span>
+                        <span class="countdown-text">Days</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-unit">
+                        <span class="countdown-value" id="cd-hours">00</span>
+                        <span class="countdown-text">Hours</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-unit">
+                        <span class="countdown-value" id="cd-minutes">00</span>
+                        <span class="countdown-text">Minutes</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-unit">
+                        <span class="countdown-value" id="cd-seconds">00</span>
+                        <span class="countdown-text">Seconds</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <!-- Marquee Section -->
     <section class="marquee-section">
