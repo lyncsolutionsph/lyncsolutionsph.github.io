@@ -866,7 +866,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 // Event Popup — Story Style + Countdown
 // ========================================
 function initEventPopup() {
-    const LAUNCH_DATE = new Date('2026-03-19T09:00:00+08:00').getTime();
+    const LAUNCH_DATE = new Date('2026-03-24T09:00:00+08:00').getTime();
     const now = Date.now();
 
     // Hide everything if launch date has passed
